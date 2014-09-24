@@ -1,3 +1,10 @@
+
+# do NOT version control the modules libraries 
+#as these are specific to each server and installed via 
+# npm install --save
+node_modules
+
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db

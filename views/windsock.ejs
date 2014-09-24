@@ -1,0 +1,151 @@
+
+<!doctype html>
+<html lang="en">
+    <head>
+
+        <meta charset="utf-8">
+        <title>WindSock</title>
+
+        <style>
+
+        .awesome-button {
+            display: block;
+            width: 320px;
+            height: 540px;
+            background: url("images/Windsack_final.png") no-repeat 0 0;
+            margin-bottom: 1em;
+			position:absolute;
+			left:10px; top:150px;
+        }
+        .WScurrentFrame {
+			position: absolute;
+			left: 10;
+			top: 140;
+		}   
+
+        </style>
+
+    </head>
+    <body>
+	<div class="windSpeedDiv">
+ <form name="windSpeedForm" id"windSpeedForm" class="windSpeedForm" action="/windSpeed" method="post">
+
+         <a class="awesome-button"></a>
+        <p class="WScurrentFrame">Current frame: <span>1</span></p>
+
+ 	<script src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js'></script>
+
+        <script src="demos/dist/spriteclip.js"></script>
+
+        <script>
+var mouseIsDown = "false";
+		//setup a variable to store our last position
+var last_position = {},
+$output       = $('#output');
+
+            //Instantiate and get the instance from the element's data-spriteClip property
+            var WSinstance = $(".awesome-button").spriteClip({
+                totalFrames: 160,
+                frameRate: 60,
+                stops: [1, 160]
+            }).data("spriteClip");
+
+            //Equivalent to
+            //var instance = new SpriteClip($(".awesome-button").get(0), {
+            //    totalFrames: 30,
+            //    frameRate: 60,
+            //    stops: [1, 30]
+            //})
+            
+            WSinstance.$el
+
+                .on("mousedown", function () {
+					console.log('mouse down');
+					mouseIsDown = "true";
+				})
+			
+			//	$(".awesome-button").on('mousemove', function (event) {
+				.on("mousemove", function (event) {
+//					console.log('mouse move');
+					if ( mouseIsDown === "true" ) {
+//										console.log('mouseIsDown == true');
+
+					//check to make sure there is data to compare against
+					if (typeof(last_position.x) != 'undefined' ) {
+					//get the change from last position to this position
+					var deltaX = last_position.x - event.clientX,
+						deltaY = last_position.y - event.clientY;
+
+					//check which direction had the highest amplitude and then figure out direction by checking if the value is greater or less than zero
+					if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX > 0) {
+						//left
+					} else if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX < 0) {
+						//right
+					} else if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY > 0) {
+						//up
+//						console.log('up');
+			            WSinstance.stop();
+
+			            WSinstance.play();
+
+					} else if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY < 0) {
+						//down
+//						console.log('down');
+			            WSinstance.stop();
+
+			            WSinstance.rewind();
+
+					}
+					
+
+
+
+				}
+				} else {
+//					console.log('mouseIsDown != true ');
+				}
+							//set the new last position to the current for next time
+					last_position = {
+						x : event.clientX,
+						y : event.clientY
+					}
+            
+			})
+			
+                .on("mouseup", function () {
+					mouseIsDown = "false";
+                    WSinstance.stop();
+					event.preventDefault();
+					console.log('client windSpeed: '+WSinstance.currentFrame);
+					var posting = $.post( '/windSpeed', { windSpeedValue: WSinstance.currentFrame } );
+					posting.done(function( data ) {
+						console.log('client post done ');
+					})
+                });
+
+            WSinstance.$dispatcher
+                .on(SpriteClip.Event.ENTER_FRAME, function (e, clip) {
+
+                    $(".WScurrentFrame span").text(WSinstance.currentFrame);
+                });
+				
+				
+function fixPageXY(e) {
+  if (e.pageX == null && e.clientX != null ) {
+    var html = document.documentElement
+    var body = document.body
+ 
+    e.pageX = e.clientX + (html.scrollLeft || body && body.scrollLeft || 0)
+    e.pageX -= html.clientLeft || 0
+    e.pageY = e.clientY + (html.scrollTop || body && body.scrollTop || 0)
+    e.pageY -= html.clientTop || 0
+  }
+}
+
+				
+				
+        </script>
+ </form>
+	</div>
+    </body>
+</html>
