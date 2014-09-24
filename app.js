@@ -12,7 +12,8 @@ var users = require('./routes/users');
 
 var pitchAngle = require('./routes/pitchAngle');
 var windSpeed = require('./routes/windSpeed');
-var load = require('./routes/load');
+var dummyLoad = require('./routes/dummyLoad');
+var dataInput = require('./routes/dataInput');
 
 var app = express();
 
@@ -34,7 +35,8 @@ app.use('/users', users);
 
 app.use('/pitchAngle', pitchAngle);
 app.use('/windSpeed', windSpeed);
-app.use('/load', load);
+app.use('/dataInput', dataInput);
+app.use('/dummyLoad', dummyLoad);
 
 if (app.get('env') === 'development') {
  console.log('App in Dev mode');

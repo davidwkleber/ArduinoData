@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Guages</title>
+ <style>
+ 		.dataInputDiv {
+			position:absolute;
+			left:630px; top:650px;
+		}
+     
+        </style>
+</head>
+<body onLoad="initialize()">
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src='/javascripts/guage.js'></script>
+</script>
+<script>
+		$('#DIstartButton').click(function(event){
+  					event.preventDefault();					
+					var posting = $.post( '/dataInput', { pitchAngleValue: "0" } );
+										
+					posting.done(function( data ) {
+						console.log('client dataInput post done ');
+					});
+					
+</script>
+
+<div class=dataInputDiv>
+
+ <form name="DIstartForm" id"DIstartForm" class="DIstartForm" action="/dataInput" method="post">
+<title><%= title %></title>
+         <a class="DIstartButtonA"></a>
+        <p class="DIdata">Data: <span>1</span></p>
+
+		
+<span class="DIstartButtonSpan">
+ <button class="DIstartButton" id="DIstartButton" name="DIstartButton" >Start Data</button> 
+ 
+  </span>
+
+	<div id="guageDiv" class="guageDiv" name="guageDiv">
+ 		<span id="memoryGaugeContainer"></span>
+		<span id="cpuGaugeContainer"></span>
+		<span id="networkGaugeContainer"></span>
+		<span id="testGaugeContainer"></span>
+	</div>
+	</div>
+</body>
+</html>
