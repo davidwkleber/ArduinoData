@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -13,31 +13,48 @@
 </head>
 <body onLoad="initialize()">
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<script type="text/javascript" src='/javascripts/guage.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+
+
+<script type="text/javascript" src="/javascripts/guage.js"></script>
+<script src="/socket.io/socket.js"></script>
+
 </script>
 <script>
-		$('#DIstartButton').click(function(event){
+		$('.DIstartButtonA').onClick(function(event){
   					event.preventDefault();					
 					var posting = $.post( '/dataInput', { pitchAngleValue: "0" } );
-										
+console.log('dataInputPost now');
 					posting.done(function( data ) {
 						console.log('client dataInput post done ');
 					});
 					
 </script>
-
+	
+    <script>
+      var socket = io.connect();
+      jQuery(function ($) {
+        var dataInputDataList = $('ul.dataInputData');
+        socket.on('dataInputData', function (data) {
+          dataInputDataList
+            .prepend('<li>' + data.dataSource + ': ' + data.dataInputData + '</li>');
+        });
+      });
+    </script>
 <div class=dataInputDiv>
 
- <form name="DIstartForm" id"DIstartForm" class="DIstartForm" action="/dataInput" method="post">
 <title><%= title %></title>
          <a class="DIstartButtonA"></a>
+		 <ul class="dataInputData"></ul>
         <p class="DIdata">Data: <span>1</span></p>
 
 		
 <span class="DIstartButtonSpan">
  <button class="DIstartButton" id="DIstartButton" name="DIstartButton" >Start Data</button> 
- 
+
   </span>
+
 
 	<div id="guageDiv" class="guageDiv" name="guageDiv">
  		<span id="memoryGaugeContainer"></span>
