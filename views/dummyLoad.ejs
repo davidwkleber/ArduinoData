@@ -45,17 +45,11 @@ $output       = $('#output');
 
             //Instantiate and get the instance from the element's data-spriteClip property
             var DLinstance = $(".DLawesome-button").spriteClip({
-                totalFrames: 1,
+                totalFrames: 201,
                 frameRate: 60,
-                stops: [1, 1]
+                stops: [1, 201]
             }).data("spriteClip");
 
-            //Equivalent to
-            //var instance = new SpriteClip($(".DLawesome-button").get(0), {
-            //    totalFrames: 30,
-            //    frameRate: 60,
-            //    stops: [1, 30]
-            //})
             
             DLinstance.$el
 

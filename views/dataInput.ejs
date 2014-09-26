@@ -1,4 +1,5 @@
-<!DOCTYPE HTML>
+<!doctype html>
+
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -11,40 +12,40 @@
      
         </style>
 </head>
-<body onLoad="initialize()">
+<body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+   <script>
 
+			iosocket = io.connect();
+			jQuery(function ($) {
+				var dataInputDataList = $('ul.dataInputData');
+				iosocket.on('update', function (data) {
+				console.log('update '+data);
+				dataInputDataList
+					.prepend('<li>' + data.dataSource + ': ' + data.dataInputData + '</li>');
+				});
+			});
+	
+    </script>
 
-<script type="text/javascript" src="/javascripts/guage.js"></script>
-<script src="/socket.io/socket.js"></script>
-
-</script>
 <script>
-		$('.DIstartButtonA').onClick(function(event){
+		$('.DIstartButtonA').on("click", function(event){
   					event.preventDefault();					
 					var posting = $.post( '/dataInput', { pitchAngleValue: "0" } );
 console.log('dataInputPost now');
 					posting.done(function( data ) {
 						console.log('client dataInput post done ');
 					});
-					
+				});	
 </script>
-	
-    <script>
-      var socket = io.connect();
-      jQuery(function ($) {
-        var dataInputDataList = $('ul.dataInputData');
-        socket.on('dataInputData', function (data) {
-          dataInputDataList
-            .prepend('<li>' + data.dataSource + ': ' + data.dataInputData + '</li>');
-        });
-      });
-    </script>
+ 
 <div class=dataInputDiv>
 
 <title><%= title %></title>
+<form name="DIstartButton" id"startButton" class="DIstartButton" action="/dataInput" method="post">
          <a class="DIstartButtonA"></a>
 		 <ul class="dataInputData"></ul>
         <p class="DIdata">Data: <span>1</span></p>
@@ -54,7 +55,7 @@ console.log('dataInputPost now');
  <button class="DIstartButton" id="DIstartButton" name="DIstartButton" >Start Data</button> 
 
   </span>
-
+</form>
 
 	<div id="guageDiv" class="guageDiv" name="guageDiv">
  		<span id="memoryGaugeContainer"></span>
