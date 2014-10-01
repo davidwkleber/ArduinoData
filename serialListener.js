@@ -1,30 +1,33 @@
 
 module.exports = serialListener;
 
-var app = require('app');
-// var io = require('socket.io').listen(app);
+var app = require('./app');
 
+/*
+var http = require('http');
+var httpServer = http.createServer();
+var io = require('socket.io').listen(http);
+
+	io.on('connection', function (socket) {
+			console.log('DI connection here');
+		});
+httpServer.listen(3001);
+*/
 var SerialPort = require("serialport").SerialPort
 
- //   serialPortBlink = new SerialPort('COM3', {
- //       baudrate: 9600, 
 
- //   });
-    
-    //    serialPortADC = new SerialPort('COM6', {
-    //    baudrate: 9600, 
-
-   // });
    
    PAserialPort = new SerialPort('COM7', {
+ 
 		// test rig
 		// baudrate: 9600,
+		
 		// wind tower
 		baudrate: 115200,
 
 	});
 	  
-   _serialPort = new SerialPort('COM3', {
+   WSserialPort = new SerialPort('COM3', {
 		baudrate: 9600,
 	});
 	
@@ -60,7 +63,32 @@ function serialListener(ComPort)
 	_comPort = comPort;
 	
  console.log('serialListenerInit called with comPort:'+comPort);
- 
+ var http = require('http');
+var httpServer = http.createServer();
+var io = require('socket.io').listen(1337);
+
+	
+// httpServer.listen(1337);
+
+console.log('setup connection now');
+
+io.sockets.on('connection', function(socket){
+  console.log('a user connected');
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
+	io.on('sliderval', function(data) {
+		console.log('DataInput : '+data);
+	});
+		io.on('update', function(data) {
+		console.log('DataInput UPDATE: '+data);
+	});
+		io.emit('updateData', {
+			dataSource: "somethig",
+			dataInputData: "something else \n"
+		});
+
  	
  
    DIserialPort.on("open", function () {
@@ -69,8 +97,8 @@ function serialListener(ComPort)
         sleep(2000, function() {
 		});
 	});
-    _serialPort.on("open", function () {
-		console.log('serialListener.serialPortBlink.on Open ' + comPort);
+    WSserialPort.on("open", function () {
+		console.log('serialListener.WSserialPort.on Open ' + comPort);
 
 		//
 		//
@@ -97,22 +125,15 @@ function serialListener(ComPort)
     DIserialPort.on('data', function(data) {
 	//	console.log('DIserialPort on data called');
          receivedData += data.toString();
-   //   if (receivedData .indexOf('x') >= 0) {
-   //    sendData = receivedData .substring(receivedData .indexOf('x') + 1) ;
-    //   receivedData = '';
-    // }
-     // // send the incoming data to browser with websockets.
-   // socketServer.emit('update', sendData);
    
-   //	socketServer.on('connection', function (socket) {
-console.log('DI connection here'+receivedData);
-    socketServer.emit('update', {
-      dataSource: receivedData,
-      dataInputData: receivedData
-	});
-//	});
-   // console.log(comPort+' data received: ' + receivedData + '\n');
-  }); 
+
+		io.emit('updateData', data  );
+		//	dataSource: "dataInputData",
+		//	dataInputData: receivedData
+		// });
+
+		//  console.log(' DIserailPort data received: ' + data);
+	}); 
  
  
     //######Version one to receive data
@@ -121,7 +142,7 @@ console.log('DI connection here'+receivedData);
         // });
         
     //######Version two to receive data with "x" as a delimiter 
-    _serialPort.on('data', function(data) {
+    WSserialPort.on('data', function(data) {
 //		console.log('serialPort on data called');
          receivedData += data.toString();
    //   if (receivedData .indexOf('x') >= 0) {
@@ -139,7 +160,7 @@ console.log('DI connection here'+receivedData);
 //		console.log('serialPort on data called');
          receivedData += data.toString();
 	//	 console.log(comPort + ' data recieved: ' + data.toString());
-  // console.log(comPort+' data received: ' + receivedData + '\n');
+   console.log(comPort+' data received: ' + receivedData + '\n');
   }); 
    
 
@@ -159,7 +180,7 @@ serialListener.write = function( id, value ) {
 	console.log('serialListener.write COM: ');
 	console.log('serialListener write value: '+value);
 	if( id === 'w' ) {
-		_serialPort.write(value, function(err, results) {
+		WSserialPort.write(value, function(err, results) {
 			console.log('Blink_err ' + err);
 			console.log('Blink_results from windSpeed ' + results);
 		});

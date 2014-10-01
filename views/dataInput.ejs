@@ -9,30 +9,58 @@
 			position:absolute;
 			left:630px; top:650px;
 		}
-     
+		.guageDiv {
+			position: absolute;
+			left: 650px, top: 650px;
+		}
         </style>
 </head>
-<body>
+<body onLoad="initialize()">
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-   <script>
+<script type="text/javascript" src="/javascripts/guage.js"></script>
 
-			iosocket = io.connect();
+   <script>
+console.log('update nothing ');
+var DIcurrentValue = 3;
+var DIvoltageValue = 4;
+var DIrpmValue = 5;
+			var iosocket = io.connect('http://127.0.0.1:1337');
+			// var iosocket = io();
+				iosocket.on('connect', function () {
+					console.log('client connected ');
+				});
 			jQuery(function ($) {
-				var dataInputDataList = $('ul.dataInputData');
-				iosocket.on('update', function (data) {
-				console.log('update '+data);
-				dataInputDataList
-					.prepend('<li>' + data.dataSource + ': ' + data.dataInputData + '</li>');
+				// var dataInputDataList = $('ul.dataInputData');
+				iosocket.on('updateData', function (data) {
+				console.log('update ' + data);
+				console.log(data.name+" "+data.value);
+				if (data.name == "current") {
+					DIcurrentValue = data.value;
+				} 
+				if (data.name == "voltage") {
+					DIvoltageValue = data.value;
+				}
+				if (data.name == "rpm") {
+					DIrpmValue = data.value;
+				}
+				$(".DIcurrent span").text(DIcurrentValue);
+				$(".DIvoltage span").text(DIvoltageValue);
+				$(".DIrpm span").text(DIrpmValue);
+				gauges["currentGuageContainer"].redraw(DIcurrentValue);
+				gauges["voltageGuageContainer"].redraw(DIvoltageValue);
+				gauges["rpmGuageContainer"].redraw(DIrpmValue);
+
+
+				// dataInputDataList.prepend('<li>' + data.dataSource + ': ' + data.dataInputData + '</li>');
 				});
 			});
 	
-    </script>
-
-<script>
-		$('.DIstartButtonA').on("click", function(event){
+ 
+		$('.DIstartButton').on("click", function(event){
+		        iosocket.emit('sliderval',3 );
   					event.preventDefault();					
 					var posting = $.post( '/dataInput', { pitchAngleValue: "0" } );
 console.log('dataInputPost now');
@@ -47,20 +75,22 @@ console.log('dataInputPost now');
 <title><%= title %></title>
 <form name="DIstartButton" id"startButton" class="DIstartButton" action="/dataInput" method="post">
          <a class="DIstartButtonA"></a>
-		 <ul class="dataInputData"></ul>
+		 <ul class="dataInputData">dataInputData</ul>
         <p class="DIdata">Data: <span>1</span></p>
 
 		
 <span class="DIstartButtonSpan">
  <button class="DIstartButton" id="DIstartButton" name="DIstartButton" >Start Data</button> 
-
+        <p class="DIcurrent">Current: <span>1</span></p>        
+		<p class="DIvoltage">Voltage: <span>1</span></p>        
+		<p class="DIrpm">RPM: <span>1</span></p>
   </span>
 </form>
 
 	<div id="guageDiv" class="guageDiv" name="guageDiv">
- 		<span id="memoryGaugeContainer"></span>
-		<span id="cpuGaugeContainer"></span>
-		<span id="networkGaugeContainer"></span>
+ 		<span id="currentGaugeContainer"></span>
+		<span id="voltageContainer"></span>
+		<span id="rpmGaugeContainer"></span>
 		<span id="testGaugeContainer"></span>
 	</div>
 	</div>

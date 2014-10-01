@@ -2,7 +2,7 @@
 //
 // module for setting Wind Speed of the wind fan
 //
-var DIserialListener = require('../lib/serialListener');
+var DIserialListener = require('../serialListener');
 
 DIserialListener('COM6');
 
@@ -10,9 +10,31 @@ DIserialListener('COM6');
 var express = require('express');
 var router = express.Router();
 
+var http = require('http');
+var httpServer = http.createServer();
+var io = require('socket.io').listen(http);
 
+	
+httpServer.listen(3001);
 
+console.log('setup connection now');
 
+io.on('connection', function(socket){
+  console.log('a user connected');
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
+	io.on('sliderval', function(data) {
+		console.log('DataInput : '+data);
+	});
+		io.on('update', function(data) {
+		console.log('DataInput UPDATE: '+data);
+	});
+		io.emit('update', {
+			dataSource: "somethig",
+			dataInputData: "something else"
+		});
 // middleware specific to this route, logs timestamps
 router.use(function timeLog(req, res, next){
 	console.log('dataInput Time: ', Date.now());
@@ -40,6 +62,10 @@ console.log('dataInput get');
 router.post('/', function(req, res, next){
 
 console.log('dataInput post');
+		io.emit('update', {
+			dataSource: "somethig",
+			dataInputData: "something else"
+		});
 console.log('dataInput value in post: ', req.param('dataInputValue', null));
 	var dataInputValue = req.param('dataInputValue', null);
 	var serialCallValue = Math.floor(dataInputValue*0.625);
@@ -57,7 +83,8 @@ console.log('dataInput value in post: ', req.param('dataInputValue', null));
 	var serialCall = 'AA'+ '\n';
 
 		console.log('dataInput serialCall: '+serialCall);
-		res.render('index', {title: 'Wind Lab', seeValue: dataInputValue });
+	 	res.render('index', {title: 'Wind Lab', seeValue: dataInputValue });
+	// res.render('dataInput', {title: 'Wind Lab', seeValue: dataInputValue });
  
 			console.log('dataInput rendered index: '+dataInputValue);
 

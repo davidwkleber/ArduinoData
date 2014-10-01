@@ -25,9 +25,9 @@ console.log("created guage");
 
 function createGauges()
 {
-createGauge("memory", "Voltage");
-createGauge("cpu", "Current");
-createGauge("network", "RPM");
+createGauge("voltage", "Voltage");
+createGauge("current", "Current");
+createGauge("rpm", "RPM");
 createGauge("test", "Power", -50, 50 );
 }
 

@@ -1,9 +1,9 @@
 //
 // module for setting Wind Speed of the wind fan
 //
-var WSserialListener = require('../lib/serialListener');
+var WSserialListener = require('../serialListener');
 
-WSserialListener('COM3');
+// WSserialListener('COM3');
 
 
 var express = require('express');

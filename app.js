@@ -15,7 +15,11 @@ var windSpeed = require('./routes/windSpeed');
 var dummyLoad = require('./routes/dummyLoad');
 var dataInput = require('./routes/dataInput');
 
+
 var app = express();
+
+
+// serialListener('COM1');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -45,11 +49,13 @@ if (app.get('env') === 'development') {
 };
 
 /// catch 404 and forward to error handler
+
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
+
 
 /// error handlers
 
@@ -79,3 +85,4 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+

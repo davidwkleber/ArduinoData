@@ -2,9 +2,9 @@
 // module for setting Pitch Angle of the wind turbine blades
 //
 
-var PAserialListener = require('../lib/serialListener');
+var PAserialListener = require('../serialListener');
 
-PAserialListener('COM7');
+// PAserialListener('COM7');
 
 var express = require('express');
 var router = express.Router();
