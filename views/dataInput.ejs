@@ -7,57 +7,68 @@
  <style>
  		.dataInputDiv {
 			position:absolute;
-			left:630px; top:650px;
+			left:630px; top:690px;
 		}
 		.guageDiv {
 			position: absolute;
-			left: 650px, top: 650px;
+			left: 550px, top: 650px;
+		}
+		.currentGaugeContainer {
+			position: absolute;
+			left: 500px, top 650px;
 		}
         </style>
 </head>
-<body onLoad="initialize()">
+<body onLoad="dataInputFunction()">
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="/javascripts/guage.js"></script>
-
+   
+   
    <script>
+  function dataInputFunction() {
+  
+	createGauge("voltage", "Voltage");
+	createGauge("current", "Current");
+	createGauge("rpm", "RPM");
+	createGauge("test", "Power", -50, 50 );
+
+   
 console.log('update nothing ');
-var DIcurrentValue = 3;
-var DIvoltageValue = 4;
-var DIrpmValue = 5;
+
+var dataItem;
 			var iosocket = io.connect('http://127.0.0.1:1337');
-			// var iosocket = io();
-				iosocket.on('connect', function () {
+
+				iosocket.on('connect', function (data) {
 					console.log('client connected ');
-				});
+														console.log('connected data ' + data);
+
+				// });
 			jQuery(function ($) {
-				// var dataInputDataList = $('ul.dataInputData');
+//				 var dataInputDataList = $('ul.dataInputData');
 				iosocket.on('updateData', function (data) {
-				console.log('update ' + data);
-				console.log(data.name+" "+data.value);
-				if (data.name == "current") {
-					DIcurrentValue = data.value;
-				} 
-				if (data.name == "voltage") {
-					DIvoltageValue = data.value;
-				}
-				if (data.name == "rpm") {
-					DIrpmValue = data.value;
-				}
-				$(".DIcurrent span").text(DIcurrentValue);
-				$(".DIvoltage span").text(DIvoltageValue);
-				$(".DIrpm span").text(DIrpmValue);
-				gauges["currentGuageContainer"].redraw(DIcurrentValue);
-				gauges["voltageGuageContainer"].redraw(DIvoltageValue);
-				gauges["rpmGuageContainer"].redraw(DIrpmValue);
+					console.log('update ' + data);
+					dataItem = JSON.parse(data);
+					console.log('updateData current ' + dataItem.current);
+
+				$(".DIcurrent span").text(dataItem.current);
+				$(".DIvoltage span").text(dataItem.voltage);
+				$(".DIrpm span").text(dataItem.rpm);
+				$(".DIpower span").text(dataItem.power);
+
+				updateGauge("current", dataItem.current);
+				updateGauge("voltage", dataItem.voltage);
+				updateGauge("rpm", dataItem.rpm);
+				updateGauge("test", dataItem.power);
 
 
-				// dataInputDataList.prepend('<li>' + data.dataSource + ': ' + data.dataInputData + '</li>');
+//				 dataInputDataList.prepend('<li>' + dataItem.name + ': ' + dataItem.value + '</li>');
+				 
 				});
 			});
-	
+	});
  
 		$('.DIstartButton').on("click", function(event){
 		        iosocket.emit('sliderval',3 );
@@ -68,31 +79,32 @@ console.log('dataInputPost now');
 						console.log('client dataInput post done ');
 					});
 				});	
+				
+};
+				
 </script>
  
 <div class=dataInputDiv>
 
 <title><%= title %></title>
 <form name="DIstartButton" id"startButton" class="DIstartButton" action="/dataInput" method="post">
-         <a class="DIstartButtonA"></a>
-		 <ul class="dataInputData">dataInputData</ul>
-        <p class="DIdata">Data: <span>1</span></p>
-
+ 
 		
 <span class="DIstartButtonSpan">
  <button class="DIstartButton" id="DIstartButton" name="DIstartButton" >Start Data</button> 
         <p class="DIcurrent">Current: <span>1</span></p>        
 		<p class="DIvoltage">Voltage: <span>1</span></p>        
 		<p class="DIrpm">RPM: <span>1</span></p>
+		<p class="DIpower">Power: <span>1</span></p>
   </span>
 </form>
+	</div>
 
 	<div id="guageDiv" class="guageDiv" name="guageDiv">
  		<span id="currentGaugeContainer"></span>
-		<span id="voltageContainer"></span>
+		<span id="voltageGaugeContainer"></span>
 		<span id="rpmGaugeContainer"></span>
 		<span id="testGaugeContainer"></span>
-	</div>
 	</div>
 </body>
 </html>

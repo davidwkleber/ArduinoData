@@ -2,6 +2,7 @@
 module.exports = serialListener;
 
 var app = require('./app');
+var portConfig = require('./portConfig.json');
 
 /*
 var http = require('http');
@@ -15,24 +16,25 @@ httpServer.listen(3001);
 */
 var SerialPort = require("serialport").SerialPort
 
+console.log('ports '+ portConfig.stepper.port +" "+ portConfig.windSpeed.port + " " + portConfig.measurement.port);
 
    
-   PAserialPort = new SerialPort('COM7', {
+   PAserialPort = new SerialPort(portConfig.stepper.port, {
  
 		// test rig
 		// baudrate: 9600,
 		
 		// wind tower
-		baudrate: 115200,
+		baudrate: portConfig.stepper.port.baudrate,
 
 	});
 	  
-   WSserialPort = new SerialPort('COM3', {
-		baudrate: 9600,
+   WSserialPort = new SerialPort(portConfig.windSpeed.port, {
+		baudrate: portConfig.windSpeed.baudrate,
 	});
 	
-	DIserialPort = new SerialPort('COM6', {
-		baudrate: 9600,
+	DIserialPort = new SerialPort(portConfig.measurement.port, {
+		baudrate: portConfig.measurement.baudrate,
 	});
 
 
@@ -81,7 +83,7 @@ io.sockets.on('connection', function(socket){
 	io.on('sliderval', function(data) {
 		console.log('DataInput : '+data);
 	});
-		io.on('update', function(data) {
+		io.on('updateData', function(data) {
 		console.log('DataInput UPDATE: '+data);
 	});
 		io.emit('updateData', {
@@ -122,17 +124,31 @@ io.sockets.on('connection', function(socket){
 
   }); 
  
+ var sendData = '';
+ var receivedData = '';
     DIserialPort.on('data', function(data) {
 	//	console.log('DIserialPort on data called');
          receivedData += data.toString();
-   
+ console.log(' DIserailPort data received: ' + receivedData )
+          if (receivedData .indexOf('{') >= 0 && receivedData .indexOf('}') >= 0) {
+			sendData = receivedData.substring(receivedData.indexOf('{'), receivedData.indexOf('}')+1);
+			receivedData = '';
+//		   console.log(' DIserailPort Full data received: ' + sendData )
 
-		io.emit('updateData', data  );
+         }
+         // send the incoming data to browser with websockets.
+      if (sendData.length > 0 ) {
+			console.log('SEND update data : '+sendData);
+			io.emit('updateData', sendData);
+			sendData = "";
+		};
+	   
+
 		//	dataSource: "dataInputData",
 		//	dataInputData: receivedData
 		// });
 
-		//  console.log(' DIserailPort data received: ' + data);
+		;
 	}); 
  
  
@@ -160,7 +176,7 @@ io.sockets.on('connection', function(socket){
 //		console.log('serialPort on data called');
          receivedData += data.toString();
 	//	 console.log(comPort + ' data recieved: ' + data.toString());
-   console.log(comPort+' data received: ' + receivedData + '\n');
+  //  console.log(comPort+' data received: ' + receivedData + '\n');
   }); 
    
 

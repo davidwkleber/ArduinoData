@@ -1,6 +1,5 @@
 
 	
-
 var gauges = [];
 
 function createGauge(name, label, min, max)
@@ -10,7 +9,7 @@ var config =
 size: 120,
 label: label,
 min: undefined != min ? min : 0,
-max: undefined != max ? max : 100,
+max: undefined != max ? max : 500,
 minorTicks: 5
 }
 
@@ -31,6 +30,12 @@ createGauge("rpm", "RPM");
 createGauge("test", "Power", -50, 50 );
 }
 
+function updateGauge(key, value)
+{
+gauges[key].redraw(value);
+}
+
+
 function updateGauges()
 {
 for (var key in gauges)
@@ -46,10 +51,10 @@ var overflow = 0; //10;
 return gauge.config.min - overflow + (gauge.config.max - gauge.config.min + overflow*2) *  Math.random();
 }
 
-function initialize()
+function initializeGauges()
 {
 createGauges();
-setInterval(updateGauges, 5000);
+// setInterval(updateGauges, 5000);
 }
 
 
@@ -314,5 +319,5 @@ function Gauge(placeholderName, configuration)
 	
 	// initialization
 	this.configure(configuration);	
-}
-initialize();
+};
+// initialize(); 

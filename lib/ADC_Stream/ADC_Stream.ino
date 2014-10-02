@@ -28,6 +28,7 @@ String msg = "";
 
 unsigned long lastTime = 0;
 long currTime= 0;
+long Power =0;
 unsigned long currTime1 = 0;
 unsigned long currTime2 = 0;
 unsigned long meassureTime = 0;
@@ -48,6 +49,7 @@ void setup()
 
 
 	Serial.begin(buad);
+        Serial.println("Ready");
 
 }
 
@@ -63,12 +65,14 @@ void loop()
 			msg+=char(Serial.read());
 			delay(10);
 		}
-		//Serial.println(msg);
+//                Serial.print("msg1: ");
+//		Serial.println(msg);
 	}
 
 	//int number = msg.substring(1);
 	msg = msg.substring(0,2);
-	
+        
+        
 	if (msg.equals("A0"))
 	{
 		currTime1 = micros();
@@ -146,10 +150,11 @@ void loop()
 
 	else if (msg.equals("AA"))
 	{
-		currTime1 = micros();
+		//currTime1 = micros();
 		readA0=analogRead(A0);
 		readA1=analogRead(A1);
 		readA2=analogRead(A2);
+                Power =long(readA0)*long(readA1);
 		//readA3=analogRead(A3);
 		//readA4=analogRead(A4);
 		//readA5=analogRead(A5);
@@ -175,7 +180,15 @@ void loop()
 		
 		
 		currTime = long(currTime2);
+		JsonObject<5> dataItem;
+		dataItem["voltage"] = readA0;
+		dataItem["current"] = readA1;
+		dataItem["rpm"] = readA2;
+		dataItem["power"] = Power;
+		dataItem["timestamp"] = currTime;
+		dataItem.prettyPrintTo(Serial);
 		
+		/*
 		JsonObject<3> volt;
 		volt["name"] = "voltage";
 		volt["value"] = readA0;
@@ -191,6 +204,11 @@ void loop()
 		rpm["value"] = readA2;
 		rpm["timestamp"] = currTime;
 		
+		JsonObject<3> PWR;
+		PWR["name"] = "pwr";
+		PWR["value"] = Power;
+		PWR["timestamp"] = currTime;
+
 		//Serial.print(volt);
 		//Serial.print(amp);
 		//Serial.println(rpm);
@@ -198,6 +216,10 @@ void loop()
 		volt.prettyPrintTo(Serial);
 		amp.prettyPrintTo(Serial);
 		rpm.prettyPrintTo(Serial);
+        PWR.prettyPrintTo(Serial);
+	*/
+		Serial.println();
+
 		
 	}
 	else if (msg.equals("S"))
