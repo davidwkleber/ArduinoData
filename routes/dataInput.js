@@ -44,42 +44,17 @@ router.use(function timeLog(req, res, next){
 // define the home page route
 router.get('/', function(req, res){
 console.log('dataInput get');
-
-	var serialCall = 'AA'+ '\n';
-
-		console.log('dataInput serialCall: '+serialCall);
-		res.render('index', {title: 'Wind Lab', seeValue: "0" });
- 
-
-	DIserialListener.write('DI', serialCall);
-	
-			console.log('dataInput serialCall done: '+serialCall);
-
-   
  	res.redirect('index');
 })
 
 router.post('/', function(req, res, next){
 
 console.log('dataInput post');
-		io.emit('update', {
-			dataSource: "somethig",
-			dataInputData: "something else"
-		});
+
 console.log('dataInput value in post: ', req.param('dataInputValue', null));
 	var dataInputValue = req.param('dataInputValue', null);
-	var serialCallValue = Math.floor(dataInputValue*0.625);
-		console.log(' rounded wind speed: '+serialCallValue);
+	
 
-	if( serialCallValue < 0 ) {
-		serialCallValue = 0;
-	} else if ( serialCallValue > 100 ) {
-		serialCallValue = 100;
-	}
-	console.log('dataInput serialCallValue: '+serialCallValue);
-	// for test rig, send r for blinkey light
-//	var serialCall = 'r' + serialCallValue + 'x\n';
-	// for real wind chamber fan, if %, start with F for forward and send % in delimeter
 	 var serialCall = 'AA'+ '\n';
 	// var serialCall = 'S';
 
@@ -87,7 +62,6 @@ console.log('dataInput value in post: ', req.param('dataInputValue', null));
 	 	res.render('index', {title: 'Wind Lab', seeValue: dataInputValue }); 
 	DIserialListener.write('DI', serialCall);
 
-	
 			console.log('dataInput serialCall done: '+serialCall);
 
 })

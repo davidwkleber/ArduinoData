@@ -9,3 +9,26 @@ body {
 a {
   color: #00B7FF;
 }
+
+
+ 		.dataInputDiv {
+			position:absolute;
+			left:630px; top:690px;
+		}
+		.guageDiv {
+			position: absolute;
+			left: 10px; top: 750px;
+		}
+
+		#rpmGaugeContainer {
+			position: absolute;
+			right: 850px; 
+			top: 350px;
+			width: 110px;
+		}
+		
+	.lineScanDiv {
+		position: absolute;
+		right: 700px;
+		top: 200px;
+	}

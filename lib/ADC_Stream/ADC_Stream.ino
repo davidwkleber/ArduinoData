@@ -188,36 +188,6 @@ void loop()
 		dataItem["timestamp"] = currTime;
 		dataItem.prettyPrintTo(Serial);
 		
-		/*
-		JsonObject<3> volt;
-		volt["name"] = "voltage";
-		volt["value"] = readA0;
-		volt["timestamp"] = currTime;
-		
-		JsonObject<3> amp;
-		amp["name"] = "current";
-		amp["value"] = readA1;
-		amp["timestamp"] = currTime;
-		
-		JsonObject<3> rpm;
-		rpm["name"] = "rpm";
-		rpm["value"] = readA2;
-		rpm["timestamp"] = currTime;
-		
-		JsonObject<3> PWR;
-		PWR["name"] = "pwr";
-		PWR["value"] = Power;
-		PWR["timestamp"] = currTime;
-
-		//Serial.print(volt);
-		//Serial.print(amp);
-		//Serial.println(rpm);
-		
-		volt.prettyPrintTo(Serial);
-		amp.prettyPrintTo(Serial);
-		rpm.prettyPrintTo(Serial);
-        PWR.prettyPrintTo(Serial);
-	*/
 		Serial.println();
 
 		

@@ -4,20 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>Guages</title>
- <style>
- 		.dataInputDiv {
-			position:absolute;
-			left:630px; top:690px;
-		}
-		.guageDiv {
-			position: absolute;
-			left: 550px, top: 650px;
-		}
-		.currentGaugeContainer {
-			position: absolute;
-			left: 500px, top 650px;
-		}
-        </style>
+<link rel="stylesheet" href="../stylesheets/style.css">
 </head>
 <body onLoad="dataInputFunction()">
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -25,7 +12,10 @@
 
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="/javascripts/guage.js"></script>
-   
+
+<div class=lineScanDiv >
+<script type="text/javascript" src="/javascripts/lineScan.js"></script>
+</div>
    
    <script>
   function dataInputFunction() {
@@ -33,7 +23,7 @@
 	createGauge("voltage", "Voltage");
 	createGauge("current", "Current");
 	createGauge("rpm", "RPM");
-	createGauge("test", "Power", -50, 50 );
+	createGauge("power", "Power", 0, 120000);
 
    
 console.log('update nothing ');
@@ -61,7 +51,7 @@ var dataItem;
 				updateGauge("current", dataItem.current);
 				updateGauge("voltage", dataItem.voltage);
 				updateGauge("rpm", dataItem.rpm);
-				updateGauge("test", dataItem.power);
+				updateGauge("power", dataItem.power);
 
 
 //				 dataInputDataList.prepend('<li>' + dataItem.name + ': ' + dataItem.value + '</li>');
@@ -71,12 +61,12 @@ var dataItem;
 	});
  
 		$('.DIstartButton').on("click", function(event){
-		        iosocket.emit('sliderval',3 );
+		     //   iosocket.emit('sliderval',3 );
   					event.preventDefault();					
 					var posting = $.post( '/dataInput', { pitchAngleValue: "0" } );
-console.log('dataInputPost now');
+// console.log('dataInputPost now');
 					posting.done(function( data ) {
-						console.log('client dataInput post done ');
+//						console.log('client dataInput post done ');
 					});
 				});	
 				
@@ -100,11 +90,13 @@ console.log('dataInputPost now');
 </form>
 	</div>
 
-	<div id="guageDiv" class="guageDiv" name="guageDiv">
+	<span id="guageDiv" class="guageDiv" name="guageDiv">
  		<span id="currentGaugeContainer"></span>
 		<span id="voltageGaugeContainer"></span>
+		<span id="powerGaugeContainer"></span>
+
+	</span>
 		<span id="rpmGaugeContainer"></span>
-		<span id="testGaugeContainer"></span>
-	</div>
+
 </body>
 </html>

@@ -27,14 +27,20 @@ console.log('ports '+ portConfig.stepper.port +" "+ portConfig.windSpeed.port + 
 		// wind tower
 		baudrate: portConfig.stepper.port.baudrate,
 
+	}, function (err) {
+		if (err) console.log('Eroror opening Pitch Angle port: ' +  portConfig.stepper.port);
 	});
 	  
    WSserialPort = new SerialPort(portConfig.windSpeed.port, {
 		baudrate: portConfig.windSpeed.baudrate,
+	}, function (err) {
+		if (err) console.log('Eroror opening Wind Speed port: ' +  portConfig.windSpeed.port);
 	});
 	
 	DIserialPort = new SerialPort(portConfig.measurement.port, {
 		baudrate: portConfig.measurement.baudrate,
+	}, function (err) {
+		if (err) console.log('Eroror opening measurement  port: ' +  portConfig.measurement.port);
 	});
 
 
@@ -67,6 +73,7 @@ function serialListener(ComPort)
  console.log('serialListenerInit called with comPort:'+comPort);
  var http = require('http');
 var httpServer = http.createServer();
+// var io = require('socket.io', { rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] }).listen(1337);
 var io = require('socket.io').listen(1337);
 
 	
@@ -126,16 +133,29 @@ io.sockets.on('connection', function(socket){
  
  var sendData = '';
  var receivedData = '';
+ var chunksIn = 0;
     DIserialPort.on('data', function(data) {
-	//	console.log('DIserialPort on data called');
+//	console.log('DIserialPort data in is: '+data.toString());
+	chunksIn = chunksIn+1;
+//	console.log('chunksIn: '+chunksIn);
          receivedData += data.toString();
- console.log(' DIserailPort data received: ' + receivedData )
-          if (receivedData .indexOf('{') >= 0 && receivedData .indexOf('}') >= 0) {
-			sendData = receivedData.substring(receivedData.indexOf('{'), receivedData.indexOf('}')+1);
+ // console.log(' DIserailPort data received: ' + receivedData );
+  //console.log(' ');
+			var jsonOpened = receivedData.indexOf('{');
+			var jsonClosed = receivedData.indexOf('}', jsonOpened);
+//			console.log('Opened: '+jsonOpened);
+//			console.log('Closed: '+jsonClosed);
+			if( jsonClosed !== -1 && jsonOpened !== -1 ) {
+			if ( jsonClosed > jsonOpened ) {
+         // if (receivedData .indexOf('{') >= 0 && receivedData .indexOf('}') >= 0) {
+		// sendData = receivedData.substring(receivedData.indexOf('{'), receivedData.indexOf('}')+1);
+			sendData = receivedData.substring(jsonOpened, jsonClosed+1);
 			receivedData = '';
-//		   console.log(' DIserailPort Full data received: ' + sendData )
+			chunksIn = 0;
+//	   console.log(' DIserailPort Full data received: ' + sendData )
 
          }
+		 }
          // send the incoming data to browser with websockets.
       if (sendData.length > 0 ) {
 			console.log('SEND update data : '+sendData);
@@ -143,11 +163,6 @@ io.sockets.on('connection', function(socket){
 			sendData = "";
 		};
 	   
-
-		//	dataSource: "dataInputData",
-		//	dataInputData: receivedData
-		// });
-
 		;
 	}); 
  
