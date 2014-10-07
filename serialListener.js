@@ -25,7 +25,7 @@ console.log('ports '+ portConfig.stepper.port +" "+ portConfig.windSpeed.port + 
 		// baudrate: 9600,
 		
 		// wind tower
-		baudrate: portConfig.stepper.port.baudrate,
+		baudrate: portConfig.stepper.baudrate,
 
 	}, function (err) {
 		if (err) console.log('Eroror opening Pitch Angle port: ' +  portConfig.stepper.port);
@@ -158,7 +158,7 @@ io.sockets.on('connection', function(socket){
 		 }
          // send the incoming data to browser with websockets.
       if (sendData.length > 0 ) {
-			console.log('SEND update data : '+sendData);
+		//	console.log('SEND update data : '+sendData);
 			io.emit('updateData', sendData);
 			sendData = "";
 		};

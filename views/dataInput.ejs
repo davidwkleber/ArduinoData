@@ -12,10 +12,7 @@
 
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="/javascripts/guage.js"></script>
-
-<div class=lineScanDiv >
-<script type="text/javascript" src="/javascripts/lineScan.js"></script>
-</div>
+   
    
    <script>
   function dataInputFunction() {
@@ -41,7 +38,7 @@ var dataItem;
 				iosocket.on('updateData', function (data) {
 					console.log('update ' + data);
 					dataItem = JSON.parse(data);
-					console.log('updateData current ' + dataItem.current);
+		//			console.log('updateData current ' + dataItem.current);
 
 				$(".DIcurrent span").text(dataItem.current);
 				$(".DIvoltage span").text(dataItem.voltage);
