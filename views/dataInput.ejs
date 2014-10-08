@@ -36,15 +36,16 @@ var dataItem;
 			jQuery(function ($) {
 //				 var dataInputDataList = $('ul.dataInputData');
 				iosocket.on('updateData', function (data) {
-					console.log('update ' + data);
+		//			console.log('update ' + data);
 					dataItem = JSON.parse(data);
 		//			console.log('updateData current ' + dataItem.current);
 
-				$(".DIcurrent span").text(dataItem.current);
+			/*
+			$(".DIcurrent span").text(dataItem.current);
 				$(".DIvoltage span").text(dataItem.voltage);
 				$(".DIrpm span").text(dataItem.rpm);
 				$(".DIpower span").text(dataItem.power);
-
+*/
 				updateGauge("current", dataItem.current);
 				updateGauge("voltage", dataItem.voltage);
 				updateGauge("rpm", dataItem.rpm);
@@ -79,10 +80,11 @@ var dataItem;
 		
 <span class="DIstartButtonSpan">
  <button class="DIstartButton" id="DIstartButton" name="DIstartButton" >Start Data</button> 
-        <p class="DIcurrent">Current: <span>1</span></p>        
+   <!--     <p class="DIcurrent">Current: <span>1</span></p>        
 		<p class="DIvoltage">Voltage: <span>1</span></p>        
 		<p class="DIrpm">RPM: <span>1</span></p>
 		<p class="DIpower">Power: <span>1</span></p>
+		-->
   </span>
 </form>
 	</div>

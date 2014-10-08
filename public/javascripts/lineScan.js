@@ -12,7 +12,7 @@ var x = d3.scale.linear()
     .range([0, width]);
  
 var y = d3.scale.linear()
-    .domain([-1, 1])
+    .domain([85000, 90000])
     .range([height, 0]);
  
 var line = d3.svg.line()
@@ -47,12 +47,14 @@ var path = svg.append("g")
     .attr("class", "line")
     .attr("d", line);
  
-tick();
+tick(0);
  
-function tick() {
+function tick( value ) {
  
   // push a new data point onto the back
-  data.push(random());
+ // data.push(random());
+ console.log('tick value: '+value);
+  data.push(value);
  
   // redraw the line, and slide it to the left
   path

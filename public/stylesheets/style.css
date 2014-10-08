@@ -11,6 +11,24 @@ a {
 }
 
 
+ 
+svg {
+  font: 10px sans-serif;
+}
+ 
+.line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+ 
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
  		.dataInputDiv {
 			position:absolute;
 			left:630px; top:690px;
@@ -27,12 +45,12 @@ a {
 			width: 110px;
 		}
 	#lineGraphTitle {
-		position: absolute;
-		left: 1200;
-		top: 100;
+		position: relative;
+		left: 200px;
+		top: 20px;
 	}
 	.lineGraphDiv {
 		position: absolute;
-		left: 900px;
+		left: 950px;
 		top: 200px;
 	}

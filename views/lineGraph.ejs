@@ -23,7 +23,7 @@
 	</div>
 
 <script>
-	function linedataInputFunction() {
+	// function linedataInputFunction() {
 	
 	console.log('lineGraphInputFunction called');
 		var dataItem;
@@ -38,15 +38,15 @@
 				iosocket.on('updateData', function (data) {
 					console.log('lineGraph update: ' + data);
 					dataItem = JSON.parse(data);
-					console.log('lineGraph updateData current ' + dataItem.current);
+					console.log('lineGraph updateData power ' + dataItem.power);
 
 					
-					tick( dataItem.current );
+					tick( dataItem.power );
 				 
 				});
 			});
 		});
-	}
+//	}
 	
 	</script>
 </body>
